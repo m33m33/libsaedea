@@ -1,6 +1,7 @@
 import random
 import oids
 import base64
+import std/sha1
 
 #
 # gen_iv(random_data): string
@@ -9,7 +10,7 @@ import base64
 # Will be stronger when provided "true" random_data
 #
 proc gen_iv*(random_data: string): string =
-  var iv = encode($genoid() & random_data)
+  var iv = $genoid() & random_data & $secureHash($genoid()) # make up some random str
   var randomizer = initRand(hash(genOid()))
   randomizer.shuffle(iv)
   return iv
@@ -20,6 +21,7 @@ proc gen_iv*(random_data: string): string =
 # encrypt_stage1(secret, iv, length): string
 #
 # First pass of string encryption, xor the secret key and initialization vector
+# it needs the original cleartext message legth
 #
 proc encrypt_stage1(secret: string, iv: string, len: int): string =
   var hidden_str: string
@@ -62,6 +64,7 @@ proc encrypt_light_stage1(secret: string, iv: string): string =
 # decrypt_stage1(secret, iv, length): string
 #
 # First pass of string decryption, xor secret,initialization vector, then cypertext and the product
+# it needs the original cleartext message length
 #
 proc decrypt_stage1(hidden: string, iv: string, len: int): string =
   var product: string
