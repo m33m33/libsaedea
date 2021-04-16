@@ -1,23 +1,63 @@
-# This is just an example to get you started. You may wish to put all of your
-# tests into a single file, or separate them into multiple `test1`, `test2`
-# etc. files (better names are recommended, just make sure the name starts with
-# the letter 't').
-#
 # To run these tests, simply execute `nimble test`.
 
 import unittest
-import strutils
 import times
 import libSAEDEA
 
-var text = "This is a clear text message... 12 12 123 and the current time is:" & $getTime()
-var secret = "shared secret"
-var iv = gen_iv("true random data")
-var encrypted = encrypt(text, secret, iv)
-var decrypted = decrypt(encrypted, secret, iv)
-echo "Secret:", secret
-echo "IV:", iv
-echo "Cleartext:", text
-echo "Decrypted:", decrypted
-echo "Encrypted:", encrypted
-check count(text, decrypted, false) == 1
+proc cmpStrChars(s1: string, s2: string): bool =
+  if s1.len != s2.len:
+    return false
+  for i in 0..s1.len-1:
+    if s1[i] != s2[i]:
+      return false
+  return true
+
+let text = "This is a clear text message... ABCDEF 12 12 123 1234 12345 123456 $*[]@!%ù 🤖😱🎰🔮📿💈⚗️🔭🔬 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod... And the current time is:" & $getTime()
+let secret = "A shared secret"
+let iv = gen_iv("some random data" & $getTime())
+
+var encrypted = encrypt(text, secret, iv, text.len)
+var decrypted = decrypt(encrypted, secret, iv, text.len)
+
+var encrypted_light = encrypt(text, secret, iv)
+var decrypted_light = decrypt(encrypted, secret, iv)
+  #echo "Secret:", secret
+  #echo "IV:", iv
+  #echo "Cleartext:", text
+  #echo "Decrypted:", decrypted
+  #echo "Encrypted:", encrypted
+  #echo "Decrypted_light:", decrypted_light
+
+echo "Matching test"
+check cmpStrChars(text, decrypted) == true
+
+echo "Wrong secret test"
+decrypted = decrypt(encrypted, "wrong secret", iv, text.len)
+check cmpStrChars(text, decrypted) == false
+
+echo "Wrong IV test"
+decrypted = decrypt(encrypted, secret, "wrong iv", text.len)
+check cmpStrChars(text, decrypted) == false
+
+echo "Wrong length test"
+decrypted = decrypt(encrypted, secret, iv, 987654)
+check cmpStrChars(text, decrypted) == false
+
+echo "All wrong test"
+decrypted = decrypt(encrypted, "wrong value", "wrong value", 123456)
+check cmpStrChars(text, decrypted) == false
+
+echo "Matching test with light encryption"
+check cmpStrChars(text, decrypted_light) == true
+
+echo "Wrong secret test with light encryption"
+decrypted_light = decrypt(encrypted, "wrong secret", iv)
+check cmpStrChars(text, decrypted_light) == false
+
+echo "Wrong IV test with light encryption"
+decrypted_light = decrypt(encrypted, secret, "wrong iv")
+check cmpStrChars(text, decrypted_light) == false
+
+echo "All wrong test with light encryption"
+decrypted_light = decrypt(encrypted, "wrong secret", "wrong iv")
+check cmpStrChars(text, decrypted_light) == false
