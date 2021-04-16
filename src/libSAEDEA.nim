@@ -1,2 +1,2 @@
-import libSAEDEA/saedea
+import libsaedea/saedea
 export saedea
