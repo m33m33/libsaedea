@@ -17,7 +17,7 @@ proc gen_iv*(random_data: string): string =
 
 
 #
-# encrypt_stage1(secret, iv): string
+# encrypt_stage1(secret, iv, length): string
 #
 # First pass of string encryption, xor the secret key and initialization vector
 #
@@ -38,7 +38,28 @@ proc encrypt_stage1(secret: string, iv: string, len: int): string =
 
 
 #
-# decrypt_stage1(secret, iv): string
+# encrypt_stage1(secret, iv): string
+#
+# First pass of string encryption, xor the secret key and initialization vector
+#
+proc encrypt_light_stage1(secret: string, iv: string): string =
+  var hidden_str: string
+  var i = 0
+
+  # xor on repeated secret text and iv up to cleartext length
+  while i < secret.len:
+    hidden_str.add(cast[char](
+                    cast[int32](
+                      secret[i]) xor
+                    cast[int32](
+                      iv[(i mod iv.len)])))
+    i+=1
+  return hidden_str
+#endproc
+
+
+#
+# decrypt_stage1(secret, iv, length): string
 #
 # First pass of string decryption, xor secret,initialization vector, then cypertext and the product
 #
@@ -59,6 +80,27 @@ proc decrypt_stage1(hidden: string, iv: string, len: int): string =
 
 
 #
+# decrypt_stage1(secret, iv): string
+#
+# First pass of string decryption, xor secret,initialization vector, then cypertext and the product
+#
+proc decrypt_light_stage1(hidden: string, iv: string): string =
+  var product: string
+  var i = 0
+
+  # xor on repeated ciphertext and iv up to cleartext length
+  while i < hidden.len:
+    product.add(cast[char](
+                  cast[int32](
+                    hidden[i]) xor
+                  cast[int32](
+                    iv[(i mod iv.len)])))
+    i+=1
+  return product
+#endproc
+
+
+#
 # encrypt(text, secret, initialization vector, text length): string
 #
 # Simple encryption for text, using secret and a random initialization vector
@@ -67,21 +109,19 @@ proc decrypt_stage1(hidden: string, iv: string, len: int): string =
 #
 proc encrypt*(text: string, secret: string, iv: string, len: int): string =
   let intermediate = encrypt_stage1(secret, iv, len)
-  #return encode(encrypt_stage1(text, intermediate, text.len))
   return encrypt_stage1(text, intermediate, len)
 #endproc
 
 
 #
-# encrypt(text, secret, initialization vector): string
+# encrypt_light(text, secret, initialization vector): string
 #
 # Light version
 # Simple encryption for text, using secret and a random initialization vector
 #
-proc encrypt*(text: string, secret: string, iv: string): string =
-  let intermediate = encrypt_stage1(secret, iv, text.len)
-  #return encode(encrypt_stage1(text, intermediate, text.len))
-  return encrypt_stage1(text, intermediate, intermediate.len)
+proc encrypt_light*(text: string, secret: string, iv: string): string =
+  let intermediate = encrypt_light_stage1(secret, iv)
+  return encrypt_light_stage1(text, intermediate)
 #endproc
 
 #
@@ -92,18 +132,16 @@ proc encrypt*(text: string, secret: string, iv: string): string =
 #
 proc decrypt*(hidden_str: string, secret: string, iv: string, len: int): string =
   let intermediate = decrypt_stage1(secret, iv, len)
-  #return decrypt_stage1(decode(hidden_str), intermediate, len)
   return decrypt_stage1(hidden_str, intermediate, len)
 #endproc
 
 #
-# decrypt(hidden, secret, initialization vector): string
+# decrypt_light(hidden, secret, initialization vector): string
 #
 # Light version
 # Simple decryption for ciphertext, using secret and a random initialization vector
 #
-proc decrypt*(hidden_str: string, secret: string, iv: string): string =
-  let intermediate = decrypt_stage1(secret, iv, hidden_str.len)
-  #return decrypt_stage1(decode(hidden_str), intermediate, len)
-  return decrypt_stage1(hidden_str, intermediate, intermediate.len)
+proc decrypt_light*(hidden_str: string, secret: string, iv: string): string =
+  let intermediate = decrypt_light_stage1(secret, iv)
+  return decrypt_light_stage1(hidden_str, intermediate)
 #endproc

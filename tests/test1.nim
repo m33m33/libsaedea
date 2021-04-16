@@ -3,6 +3,7 @@
 import unittest
 import times
 import libSAEDEA
+import std/sha1
 
 proc cmpStrChars(s1: string, s2: string): bool =
   if s1.len != s2.len:
@@ -19,14 +20,18 @@ let iv = gen_iv("some random data" & $getTime())
 var encrypted = encrypt(text, secret, iv, text.len)
 var decrypted = decrypt(encrypted, secret, iv, text.len)
 
-var encrypted_light = encrypt(text, secret, iv)
-var decrypted_light = decrypt(encrypted, secret, iv)
-  #echo "Secret:", secret
-  #echo "IV:", iv
-  #echo "Cleartext:", text
-  #echo "Decrypted:", decrypted
-  #echo "Encrypted:", encrypted
-  #echo "Decrypted_light:", decrypted_light
+var encrypted_light = encrypt_light(text, secret, iv)
+var decrypted_light = decrypt_light(encrypted_light, secret, iv)
+
+echo "Secret:", secret
+echo "IV:", iv
+echo "Cleartext          :", text
+echo "Decrypted          :", decrypted
+echo "Decrypted_light    :", decrypted_light
+#echo "Encrypted          :", encrypted
+echo "Encrypted sha1     :", secureHash(encrypted)
+#echo "Encrypted_light    :", encrypted_light
+echo "Encrpted_light sha1:", secureHash(encrypted_light)
 
 echo "Matching test"
 check cmpStrChars(text, decrypted) == true
@@ -51,13 +56,13 @@ echo "Matching test with light encryption"
 check cmpStrChars(text, decrypted_light) == true
 
 echo "Wrong secret test with light encryption"
-decrypted_light = decrypt(encrypted, "wrong secret", iv)
+decrypted_light = decrypt_light(encrypted_light, "wrong secret", iv)
 check cmpStrChars(text, decrypted_light) == false
 
 echo "Wrong IV test with light encryption"
-decrypted_light = decrypt(encrypted, secret, "wrong iv")
+decrypted_light = decrypt_light(encrypted_light, secret, "wrong iv")
 check cmpStrChars(text, decrypted_light) == false
 
 echo "All wrong test with light encryption"
-decrypted_light = decrypt(encrypted, "wrong secret", "wrong iv")
+decrypted_light = decrypt_light(encrypted_light, "wrong secret", "wrong iv")
 check cmpStrChars(text, decrypted_light) == false
