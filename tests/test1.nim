@@ -7,9 +7,10 @@
 
 import unittest
 import strutils
+import times
 import libSAEDEA
 
-var text = "This is a clear text message... 12 12 123"
+var text = "This is a clear text message... 12 12 123 and the current time is:" & $getTime()
 var secret = "shared secret"
 var iv = gen_iv("true random data")
 var encrypted = encrypt(text, secret, iv)
