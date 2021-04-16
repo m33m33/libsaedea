@@ -9,12 +9,23 @@ Nim Library implementing a variation of Simple And Efficient Data Encryption Alg
 `gen_iv("your random data: string")`
 => gives you an Initialization Vector (type: string)
 
+
+## SAEDEA complete implementation
+
+`ecrypt("your cleartext data: string", "the shared secret: string", "initialization vector: string", "length of the cleartext data: int")`
+=> gives the encrypted data (type: string)
+
+`decrypt("the encrypted string", "the shared secret: string", "initialization vector: string", "length of the cleartext data: int")`
+=> gives the cleartext data (type: string)
+
+
+## SAEDEA light implementation
+
 `ecrypt("your cleartext data: string", "the shared secret: string", "initialization vector: string")`
 => gives the encrypted data (type: string)
 
 `decrypt("the encrypted string", "the shared secret: string", "initialization vector: string")`
 => gives the cleartext data (type: string)
-
 
 ## Disclamer, misc
 
