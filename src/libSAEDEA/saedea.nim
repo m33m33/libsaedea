@@ -15,6 +15,7 @@ proc gen_iv*(random_data: string): string =
   return iv
 #endproc
 
+
 #
 # encrypt_stage1(secret, iv): string
 #
