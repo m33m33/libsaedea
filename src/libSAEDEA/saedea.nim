@@ -1,6 +1,5 @@
 import random
 import oids
-import base64
 import std/sha1
 
 #
