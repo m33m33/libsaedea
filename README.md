@@ -29,6 +29,6 @@ Nim Library implementing a variation of Simple And Efficient Data Encryption Alg
 
 ## Disclamer, misc
 
-This is an early test implementation
+This is implementation has not been fool proofed as per today
 
 <small><div>Icons from <a href="https://www.flaticon.com/fr/auteurs/srip" title="srip">srip</a> from <a href="https://www.flaticon.com/fr/" title="Flaticon">www.flaticon.com</a></div></small>
