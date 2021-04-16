@@ -2,7 +2,7 @@
 
 Nim Library implementing a variation of Simple And Efficient Data Encryption Algorithm
 
-Research paper pdf: [INTERNATIONAL JOURNAL OF SCIENTIFIC & TECHNOLOGY RESEARCH VOLUME 8, ISSUE 12, DECEMBER 2019 ISSN 2277-8616](http://www.ijstr.org/final-print/dec2013/A-Survey-On-Some-Encryption-Algorithms-And-Verification-Of-Rsa-Technique.pdf)
+Research paper pdf: [INTERNATIONAL JOURNAL OF SCIENTIFIC & TECHNOLOGY RESEARCH VOLUME 8, ISSUE 12, DECEMBER 2019 ISSN 2277-8616](http://www.ijstr.org/final-print/dec2013/A-Survey-On-Some-Encryption-Algorithms-And-Verification-Of-Rsa-Technique.pdf) from [IJSTR.org](https://www.ijstr.org/paper-references.php?ref=IJSTR-1119-24664)
 
 # Usage:
 `import libSAEDEA`
