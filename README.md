@@ -1,0 +1,4 @@
+# libSAEDEA
+
+Nim Library implementing a variation of Simple And Efficient Data Encryption Algorithm
+(INTERNATIONAL JOURNAL OF SCIENTIFIC & TECHNOLOGY RESEARCH VOLUME 8, ISSUE 12, DECEMBER 2019 ISSN 2277-8616)
