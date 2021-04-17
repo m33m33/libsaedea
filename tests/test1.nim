@@ -17,11 +17,11 @@ let text = "This is a clear text message... ABCDEF 12 12 123 1234 12345 123456 $
 let secret = "A shared secret"
 let iv = gen_iv("some random data" & $getTime())
 
-var encrypted = encrypt(text, secret, iv, text.len)
-var decrypted = decrypt(encrypted, secret, iv, text.len)
+var encrypted = saedea_encrypt(text, secret, iv, text.len)
+var decrypted = saedea_decrypt(encrypted, secret, iv, text.len)
 
-var encrypted_light = encrypt_light(text, secret, iv)
-var decrypted_light = decrypt_light(encrypted_light, secret, iv)
+var encrypted_light = saedea_encrypt_light(text, secret, iv)
+var decrypted_light = saedea_decrypt_light(encrypted_light, secret, iv)
 
 echo "Secret:", secret
 echo "IV:", iv
@@ -37,32 +37,32 @@ echo "Matching test"
 check cmpStrChars(text, decrypted) == true
 
 echo "Wrong secret test"
-decrypted = decrypt(encrypted, "wrong secret", iv, text.len)
+decrypted = saedea_decrypt(encrypted, "wrong secret", iv, text.len)
 check cmpStrChars(text, decrypted) == false
 
 echo "Wrong IV test"
-decrypted = decrypt(encrypted, secret, "wrong iv", text.len)
+decrypted = saedea_decrypt(encrypted, secret, "wrong iv", text.len)
 check cmpStrChars(text, decrypted) == false
 
 echo "Wrong length test"
-decrypted = decrypt(encrypted, secret, iv, 987654)
+decrypted = saedea_decrypt(encrypted, secret, iv, 987654)
 check cmpStrChars(text, decrypted) == false
 
 echo "All wrong test"
-decrypted = decrypt(encrypted, "wrong value", "wrong value", 123456)
+decrypted = saedea_decrypt(encrypted, "wrong value", "wrong value", 123456)
 check cmpStrChars(text, decrypted) == false
 
 echo "Matching test with light encryption"
 check cmpStrChars(text, decrypted_light) == true
 
 echo "Wrong secret test with light encryption"
-decrypted_light = decrypt_light(encrypted_light, "wrong secret", iv)
+decrypted_light = saedea_decrypt_light(encrypted_light, "wrong secret", iv)
 check cmpStrChars(text, decrypted_light) == false
 
 echo "Wrong IV test with light encryption"
-decrypted_light = decrypt_light(encrypted_light, secret, "wrong iv")
+decrypted_light = saedea_decrypt_light(encrypted_light, secret, "wrong iv")
 check cmpStrChars(text, decrypted_light) == false
 
 echo "All wrong test with light encryption"
-decrypted_light = decrypt_light(encrypted_light, "wrong secret", "wrong iv")
+decrypted_light = saedea_decrypt_light(encrypted_light, "wrong secret", "wrong iv")
 check cmpStrChars(text, decrypted_light) == false
