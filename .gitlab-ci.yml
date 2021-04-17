@@ -1,0 +1,19 @@
+image: debian:testing
+
+stages:
+  - test
+
+.tags: &tags
+  tags:
+    - general
+
+before_script:
+  - apt-get -y update
+  - apt-get -y install nim
+
+build_bin:
+    tags:
+        - general
+    stage: test
+    script:
+        - nimble test
