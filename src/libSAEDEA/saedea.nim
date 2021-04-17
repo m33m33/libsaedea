@@ -1,6 +1,6 @@
 import random
 import oids
-import std/sha1
+
 
 #
 # gen_iv(random_data): string
@@ -9,9 +9,11 @@ import std/sha1
 # Will be stronger when provided "true" random_data
 #
 proc gen_iv*(random_data: string): string =
-  var iv = $genoid() & random_data & $secureHash($genoid()) # make up some random str
+  var iv = $genoid() & random_data # make up some random str
   var randomizer = initRand(hash(genOid()))
   randomizer.shuffle(iv)
+  for c in 0..iv.len-1:
+    iv[c] = chr(cast[uint16](iv[c]) + (cast[uint16](iv[0]) mod 5))
   return iv
 #endproc
 
