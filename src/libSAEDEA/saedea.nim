@@ -111,7 +111,7 @@ proc decrypt_light_stage1(hidden: string, iv: string): string =
 # The lenght of cleartext message is needed, this will produce an encrypted message
 # following the SAEDEA paper
 #
-proc encrypt*(text: string, secret: string, iv: string, len: int): string =
+proc saedea_encrypt*(text: string, secret: string, iv: string, len: int): string =
   let intermediate = encrypt_stage1(secret, iv, len)
   return encrypt_stage1(text, intermediate, len)
 #endproc
@@ -123,7 +123,7 @@ proc encrypt*(text: string, secret: string, iv: string, len: int): string =
 # Light version
 # Simple encryption for text, using secret and a random initialization vector
 #
-proc encrypt_light*(text: string, secret: string, iv: string): string =
+proc saedea_encrypt_light*(text: string, secret: string, iv: string): string =
   let intermediate = encrypt_light_stage1(secret, iv)
   return encrypt_light_stage1(text, intermediate)
 #endproc
@@ -134,7 +134,7 @@ proc encrypt_light*(text: string, secret: string, iv: string): string =
 # Simple decryption for ciphertext, using secret and a random initialization vector
 # The original cleartext lenght is needed
 #
-proc decrypt*(hidden_str: string, secret: string, iv: string, len: int): string =
+proc saedea_decrypt*(hidden_str: string, secret: string, iv: string, len: int): string =
   let intermediate = decrypt_stage1(secret, iv, len)
   return decrypt_stage1(hidden_str, intermediate, len)
 #endproc
@@ -145,7 +145,7 @@ proc decrypt*(hidden_str: string, secret: string, iv: string, len: int): string 
 # Light version
 # Simple decryption for ciphertext, using secret and a random initialization vector
 #
-proc decrypt_light*(hidden_str: string, secret: string, iv: string): string =
+proc saedea_decrypt_light*(hidden_str: string, secret: string, iv: string): string =
   let intermediate = decrypt_light_stage1(secret, iv)
   return decrypt_light_stage1(hidden_str, intermediate)
 #endproc
