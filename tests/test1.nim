@@ -2,7 +2,7 @@
 
 import unittest
 import times
-import libSAEDEA
+import libsaedea
 import std/sha1
 
 proc cmpStrChars(s1: string, s2: string): bool =
